@@ -2,45 +2,52 @@
 <html>
 <head>
     <style>
-        table, th, td {
-            border: 1px solid black;
+        table {
+            font-family: arial, sans-serif;
             border-collapse: collapse;
+            width: 100%;
         }
-        th, td {
-            padding: 15px;
+
+        td, th {
+            border: 1px solid #dddddd;
             text-align: left;
+            padding: 8px;
         }
-        table#t01 {
-            width: 50%;
-            background-color: #f1f1c1;
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
         }
     </style>
 </head>
 <body>
-
-<h2>Task Table</h2>
-
-<table id="t01">
+<form action="{{ route('task.create') }}">
+    <button>Create</button>
+</form>
+<table>
     <tr>
         <th>ID</th>
         <th>Name</th>
         <th>Status</th>
+        <th>Delete</th>
+        <th>Edit</th>
     </tr>
-    <tr>
-        <td>Jill</td>
-        <td>Smith</td>
-        <td>50</td>
-    </tr>
-    <tr>
-        <td>Eve</td>
-        <td>Jackson</td>
-        <td>94</td>
-    </tr>
-    <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>80</td>
-    </tr>
+    @foreach($tasks as $task)
+        <tr>
+            <td>{{ $task->id }}</td>
+            <td>{{ $task->name }}</td>
+            <td>
+                <input data-id="{{$task->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="InActive" {{ $task->status ? 'checked' : '' }} disabled>
+            </td>
+            <form action="{{ route('task.delete', $task->id) }}" method="post">
+                {{ csrf_field() }}
+                <td><button type="submit" class='delete' data-id='$id'>Delete</button></td>
+            </form>
+            <form action="{{ route('task.edit', $task->id) }}" method="get">
+                {{ csrf_field() }}
+                <td><button type="submit" class='edit' data-id='$id'>Edit</button></td>
+            </form>
+        </tr>
+    @endforeach
 </table>
 
 </body>
